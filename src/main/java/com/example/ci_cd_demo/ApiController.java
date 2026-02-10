@@ -8,7 +8,7 @@ public class ApiController {
 
     @GetMapping("/health")
     public String health() {
-        return "OK";
+        return "Hi, My name is Arshpreet";
     }
 
     @GetMapping("/api/hello")
