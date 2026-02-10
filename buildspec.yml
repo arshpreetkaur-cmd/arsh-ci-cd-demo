@@ -1,30 +1,15 @@
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-      java: corretto17
-    commands:
-      - echo "Installing zip utility"
-      - yum install -y zip || true
-
   build:
     commands:
-      - echo "Building JAR"
-      - mvn clean package -DskipTests
-      - ls -la target
-
-      - echo "Creating Elastic Beanstalk bundle"
+      - ./mvnw -DskipTests package
       - mkdir -p eb_bundle
       - cp Procfile eb_bundle/Procfile
       - cp target/*.jar eb_bundle/application.jar
 
-      - cd eb_bundle
-      - zip -r ../deploy.zip .
-      - cd ..
-
-      - ls -la deploy.zip
-
 artifacts:
+  base-directory: eb_bundle
   files:
-    - deploy.zip
+    - Procfile
+    - application.jar
