@@ -4,23 +4,27 @@ phases:
   install:
     runtime-versions:
       java: corretto17
-  pre_build:
     commands:
-      - echo "Java version:"
-      - java -version
-      - echo "Maven version:"
-      - mvn -version
+      - echo "Installing zip utility"
+      - yum install -y zip || true
+
   build:
     commands:
-      - echo "Build started on $(date)"
+      - echo "Building JAR"
       - mvn clean package -DskipTests
-  post_build:
-    commands:
-      - echo "Build finished on $(date)"
       - ls -la target
+
+      - echo "Creating Elastic Beanstalk bundle"
+      - mkdir -p eb_bundle
+      - cp Procfile eb_bundle/Procfile
+      - cp target/*.jar eb_bundle/application.jar
+
+      - cd eb_bundle
+      - zip -r ../deploy.zip .
+      - cd ..
+
+      - ls -la deploy.zip
 
 artifacts:
   files:
-    - Procfile
-    - target/*.jar
-  discard-paths: yes
+    - deploy.zip
