@@ -3,6 +3,7 @@ version: 0.2
 phases:
   build:
     commands:
+      - chmod +x mvnw
       - ./mvnw -DskipTests package
       - mkdir -p eb_bundle
       - cp Procfile eb_bundle/Procfile
